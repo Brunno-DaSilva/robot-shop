@@ -1,4 +1,5 @@
 const instana = require("@instana/collector");
+
 // init tracing
 // MUST be done before loading anything else!
 instana({
@@ -9,6 +10,7 @@ instana({
 
 const redis = require("redis");
 const request = require("request");
+const url = require("url");
 const bodyParser = require("body-parser");
 const express = require("express");
 const pino = require("pino");
@@ -396,20 +398,28 @@ function calcTax(total) {
 
 function getProduct(sku) {
   return new Promise((resolve, reject) => {
-    request(
-      "http://" + catalogueHost + ":8080/product/" + sku,
-      (err, res, body) => {
-        if (err) {
-          reject(err);
-        } else if (res.statusCode != 200) {
-          resolve(null);
-        } else {
-          // return object - body is a string
-          // TODO - catch parse error
-          resolve(JSON.parse(body));
+    const productURL = url.format({
+      protocol: "https",
+      hostname: catalogueHost,
+      port: 8080,
+      pathname: `:8080/product/${sku}`,
+    });
+
+    request(productURL, (err, res, body) => {
+      if (err) {
+        return reject(err);
+      } else if (res.statusCode != 200) {
+        return resolve(null);
+      } else {
+        try {
+          // Parse the body safely
+          const product = JSON.parse(body);
+          resolve(product);
+        } catch (parseError) {
+          reject(new Error("Failed to parse response body"));
         }
       }
-    );
+    });
   });
 }
 
