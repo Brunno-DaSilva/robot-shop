@@ -86,7 +86,9 @@ app.get("/cart/:id", (req, res) => {
   redisClient.get(req.params.id, (err, data) => {
     if (err) {
       req.log.error("ERROR", err);
-      res.status(500).send(err);
+      res.status(500).json({
+        message: "An internal error occurred. Please try again later.",
+      });
     } else {
       if (data == null) {
         res.status(404).send("cart not found");
@@ -103,7 +105,9 @@ app.delete("/cart/:id", (req, res) => {
   redisClient.del(req.params.id, (err, data) => {
     if (err) {
       req.log.error("ERROR", err);
-      res.status(500).send(err);
+      res.status(500).json({
+        message: "An internal error occurred. Please try again later.",
+      });
     } else {
       if (data == 1) {
         res.send("OK");
@@ -119,7 +123,9 @@ app.get("/rename/:from/:to", (req, res) => {
   redisClient.get(req.params.from, (err, data) => {
     if (err) {
       req.log.error("ERROR", err);
-      res.status(500).send(err);
+      res.status(500).json({
+        message: "An internal error occurred. Please try again later.",
+      });
     } else {
       if (data == null) {
         res.status(404).send("cart not found");
@@ -131,7 +137,9 @@ app.get("/rename/:from/:to", (req, res) => {
           })
           .catch((err) => {
             req.log.error(err);
-            res.status(500).send(err);
+            res.status(500).json({
+              message: "An internal error occurred. Please try again later.",
+            });
           });
       }
     }
@@ -169,7 +177,9 @@ app.get("/add/:id/:sku/:qty", (req, res) => {
       redisClient.get(req.params.id, (err, data) => {
         if (err) {
           req.log.error("ERROR", err);
-          res.status(500).send(err);
+          res.status(500).json({
+            message: "An internal error occurred. Please try again later.",
+          });
         } else {
           var cart;
           if (data == null) {
@@ -205,14 +215,18 @@ app.get("/add/:id/:sku/:qty", (req, res) => {
             })
             .catch((err) => {
               req.log.error(err);
-              res.status(500).send(err);
+              res.status(500).json({
+                message: "An internal error occurred. Please try again later.",
+              });
             });
         }
       });
     })
     .catch((err) => {
       req.log.error(err);
-      res.status(500).send(err);
+      res.status(500).json({
+        message: "An internal error occurred. Please try again later.",
+      });
     });
 });
 
@@ -234,7 +248,9 @@ app.get("/update/:id/:sku/:qty", (req, res) => {
   redisClient.get(req.params.id, (err, data) => {
     if (err) {
       req.log.error("ERROR", err);
-      res.status(500).send(err);
+      res.status(500).json({
+        message: "An internal error occurred. Please try again later.",
+      });
     } else {
       if (data == null) {
         res.status(404).send("cart not found");
@@ -266,7 +282,9 @@ app.get("/update/:id/:sku/:qty", (req, res) => {
             })
             .catch((err) => {
               req.log.error(err);
-              res.status(500).send(err);
+              res.status(500).json({
+                message: "An internal error occurred. Please try again later.",
+              });
             });
         }
       }
@@ -289,7 +307,9 @@ app.post("/shipping/:id", (req, res) => {
     redisClient.get(req.params.id, (err, data) => {
       if (err) {
         req.log.error("ERROR", err);
-        res.status(500).send(err);
+        res.status(500).json({
+          message: "An internal error occurred. Please try again later.",
+        });
       } else {
         if (data == null) {
           req.log.info("no cart for", req.params.id);
@@ -328,7 +348,9 @@ app.post("/shipping/:id", (req, res) => {
             })
             .catch((err) => {
               req.log.error(err);
-              res.status(500).send(err);
+              res.status(500).json({
+                message: "An internal error occurred. Please try again later.",
+              });
             });
         }
       }
